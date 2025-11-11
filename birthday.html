@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Happy Birthday Anthony 🎉</title>
+  <style>
+    /* ===== FC-26 inspired theme: dark + neon cyan accents ===== */
+    :root{
+      --bg:#041022;        /* very dark navy */
+      --card:#0b1220;      /* darker card color */
+      --accent:#00f0ff;    /* neon cyan */
+      --accent-2:#7df3ff;  /* lighter cyan */
+      --glow: 0 6px 20px rgba(0,240,255,0.18);
+      --text:#f7fbff;
+      --soft:#cfeff6;
+    }
+    html,body{height:100%;margin:0;font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
+    body{
+      background:
+        radial-gradient(circle at 10% 20%, rgba(0,240,255,0.03), transparent 6%),
+        linear-gradient(180deg, #021024 0%, var(--bg) 40%, #01030a 100%);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--text);
+      padding:24px;
+      -webkit-font-smoothing:antialiased;
+      overflow:hidden;
+    }
+
+    /* container */
+    .wrap{
+      max-width:520px;
+      width:100%;
+      text-align:center;
+      position:relative;
+      padding:28px;
+      border-radius:18px;
+      box-shadow: 0 10px 30px rgba(2,8,20,0.6), var(--glow);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      backdrop-filter: blur(6px);
+    }
+
+    h1{
+      margin:0 0 8px 0;
+      font-size:20px;
+      letter-spacing:1px;
+      color:var(--soft);
+    }
+    p.lead{
+      margin:0 0 22px 0;
+      color:#9fcde0;
+      font-size:14px;
+    }
+
+    /* card pack area */
+    .stage{
+      height:320px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      perspective:1200px;
+    }
+
+    /* pack (closed) */
+    .pack{
+      width:180px;
+      height:220px;
+      border-radius:14px;
+      background: linear-gradient(180deg,#08304a 0%, #042035 100%);
+      position:relative;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.6), 0 0 40px rgba(0,240,255,0.06);
+      transform-origin:center bottom;
+      cursor:pointer;
+      transition: transform 600ms cubic-bezier(.2,.9,.3,1);
+    }
+    .pack::before{
+      content:"";
+      position:absolute;
+      left:18px; right:18px; top:14px; height:10px;
+      background: linear-gradient(90deg, rgba(125,243,255,0.12), rgba(0,240,255,0.06));
+      border-radius:6px;
+      filter: blur(4px);
+    }
+    .pack .logo{
+      position:absolute;
+      top:42%;
+      left:50%;
+      transform:translate(-50%,-50%);
+      color:var(--accent);
+      font-weight:700;
+      font-size:22px;
+      letter-spacing:1px;
+      text-shadow: 0 2px 12px rgba(0,240,255,0.08);
+    }
+    .pack:hover{ transform: translateY(-6px) scale(1.02); }
+
+    /* when open: rotate and move up */
+    .pack.open{
+      transform: rotateX(75deg) translateY(-120px) scale(1.1);
+      transition: transform 700ms cubic-bezier(.22,.9,.3,1);
+    }
+
+    /* the card inside */
+    .card{
+      width:280px;
+      height:180px;
+      border-radius:14px;
+      background: linear-gradient(180deg,#062033, #06273b);
+      position:absolute;
+      top: calc(50% - 10px);
+      transform-origin: top center;
+      transform: translateY(90px) rotateX(-90deg);
+      box-shadow: 0 20px 40px rgba(3,9,20,0.6), 0 0 30px rgba(0,240,255,0.04);
+      transition: transform 700ms cubic-bezier(.2,.95,.2,1), opacity 400ms;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      text-align:center;
+    }
+
+    .card.revealed{
+      transform: translateY(-30px) rotateX(0deg);
+    }
+
+    .card .message{
+      color:var(--text);
+      font-size:20px;
+      line-height:1.15;
+      font-weight:600;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+    }
+    .card .sub{
+      display:block;
+      font-weight:400;
+      color:#bfeff7;
+      font-size:14px;
+      margin-top:8px;
+      font-weight:500;
+    }
+
+    /* confetti bits */
+    .confetti{
+      position:absolute;
+      left:0;right:0;top:0;bottom:0;
+      pointer-events:none;
+      overflow:visible;
+    }
+
+    .btn{
+      margin-top:18px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      border:none;
+      padding:10px 18px;
+      border-radius:999px;
+      color:#00202a;
+      font-weight:700;
+      cursor:pointer;
+      box-shadow:0 6px 18px rgba(0,240,255,0.12);
+    }
+
+    /* small hint */
+    .hint{
+      margin-top:12px;
+      color:#7fbccf;
+      font-size:12px;
+    }
+
+    /* responsive */
+    @media (max-width:420px){
+      .pack{ width:150px;height:190px;}
+      .card{ width:240px;height:160px;}
+      .wrap{ padding:18px;}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>🎉 A little surprise</h1>
+    <p class="lead">Tap the pack to open — a special birthday message will pop out.</p>
+
+    <div class="stage">
+      <!-- card that reveals -->
+      <div id="card" class="card" aria-hidden="true">
+        <div>
+          <div class="message" id="bigText">Happy birthday <span id="name">Anthony</span> 🎂</div>
+          <span class="sub">I love you 💖</span>
+        </div>
+      </div>
+
+      <!-- pack on top that you tap -->
+      <div id="pack" class="pack" role="button" tabindex="0" aria-pressed="false" aria-label="Open pack">
+        <div class="logo">FC26</div>
+      </div>
+
+      <!-- confetti container -->
+      <div class="confetti" id="confetti"></div>
+    </div>
+
+    <button class="btn" id="openBtn">Open the pack</button>
+    <div class="hint">Tip: change the name by editing the file in Kodex (search for <code>Anthony</code>).</div>
+  </div>
+
+  <script>
+    // Small, beginner-friendly JS to animate pack -> card -> confetti
+    const pack = document.getElementById('pack');
+    const card = document.getElementById('card');
+    const btn  = document.getElementById('openBtn');
+    const confettiContainer = document.getElementById('confetti');
+
+    // function: create confetti pieces
+    function spawnConfetti() {
+      confettiContainer.innerHTML = '';
+      const total = 24;
+      for (let i=0;i<total;i++){
+        const el = document.createElement('div');
+        el.style.position = 'absolute';
+        el.style.width = (8 + Math.random()*10) + 'px';
+        el.style.height = (6 + Math.random()*8) + 'px';
+        el.style.left = (50 + (Math.random()-0.5)*120) + '%';
+        el.style.top = (30 + Math.random()*20) + '%';
+        el.style.background = ['#00f0ff','#7df3ff','#00ffc9','#86fff3'][Math.floor(Math.random()*4)];
+        el.style.borderRadius = '2px';
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(0) rotate('+Math.random()*360+'deg)';
+        el.style.transition = `transform ${1 + Math.random()*1.2}s cubic-bezier(.15,.8,.3,1), opacity ${0.6 + Math.random()*0.5}s`;
+        confettiContainer.appendChild(el);
+
+        // animate after tiny delay
+        setTimeout(()=> {
+          el.style.opacity = '1';
+          const dx = (Math.random()-0.5)*300;
+          const dy = 380 + Math.random()*200;
+          const rot = (Math.random()-0.5)*720;
+          el.style.transform = `translate(${dx}px, ${dy}px) rotate(${rot}deg)`;
+          el.style.opacity = '0.9';
+        }, 80 + i*20);
+      }
+      // remove after animation
+      setTimeout(()=> confettiContainer.innerHTML = '', 2400);
+    }
+
+    // main open function
+    function openPack(){
+      if (pack.classList.contains('open')) return; // already opened
+      // flip pack up
+      pack.classList.add('open');
+      pack.setAttribute('aria-pressed','true');
+
+      // after a short delay, reveal card
+      setTimeout(()=> {
+        card.classList.add('revealed');
+        card.setAttribute('aria-hidden','false');
+        spawnConfetti();
+      }, 420);
+
+      // optional: small sound using WebAudio (works without file)
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = 'sine';
+        o.frequency.value = 880;
+        o.connect(g);
+        g.connect(ctx.destination);
+        g.gain.value = 0.001;
+        o.start();
+        g.gain.exponentialRampToValueAtTime(0.08, ctx.currentTime + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.5);
+        o.stop(ctx.currentTime + 0.6);
+      } catch(e){}
+    }
+
+    // handlers: click on pack or open button
+    pack.addEventListener('click', openPack);
+    btn.addEventListener('click', openPack);
+
+    // keyboard accessibility
+    pack.addEventListener('keydown', (e)=> { if (e.key==='Enter' || e.key===' ') openPack(); });
+
+    // editable name: to change, edit in the HTML file the text 'Anthony'
+    // Optional extra: you can set name from prompt (uncomment to enable)
+    // const nameEl = document.getElementById('name');
+    // const newName = prompt('Enter name to show','Anthony');
+    // if(newName) nameEl.innerText = newName;
+  </script>
+</body>
+</html>
